@@ -1,0 +1,44 @@
+# Sway config file
+#
+# Please see https://man.archlinux.org/man/sway.5.en for a complete reference!
+#
+
+# Set font
+font pango:monospace 8
+
+set $mod Mod4 
+
+# Exit sway binding
+bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your session.' -b 'Yes, exit sway' 'swaymsg exit'
+
+# Swedish Keyboard
+input * {
+    xkb_layout "se"
+    xkb_options caps:swapescape
+}
+
+# Include sway-i3 commons
+include ../sway-i3-common
+
+# Background 
+output * bg /home/love/Pictures/wallpaper.jpg fill
+
+# Executing applications on start
+exec swaynag
+exec nm-applet
+exec mako
+exec /usr/libexec/xdg-desktop-portal-gtk
+exec gnome-keyring-daemon -d
+exec gnome-keyring-daemon --unlock
+
+# Setting up bar
+bar {
+    swaybar_command waybar
+    font pango:monospace 12
+}
+
+# Screen shot
+bindsym Print exec grim -g "$(slurp -d)" - | wl-copy -t image/png # Screenshot
+
+# Locking the screen
+bindsym Control+Mod1+l exec swaylock -f -c 000000
