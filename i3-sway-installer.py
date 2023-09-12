@@ -8,13 +8,13 @@ from enum import Enum, auto
 
 PACKAGES = {
     "i3": {
-        "shared": ["i3-gaps", "polybar", "dunst"],
+        "shared": ["i3-gaps", "polybar", "dunst", "picom", "NetworkManager", "i3lock", "scrot"],
         "fedora": [],
         "debian": [],
         "arch": [],
     },
     "sway": {
-        "shared": ["sway", "waybar"],
+        "shared": ["sway", "waybar", "NetworkManager"],
         "fedora": ["mako"],
         "debian": ["mako-notifier"],
         "arch": ["mako"],
