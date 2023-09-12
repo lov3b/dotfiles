@@ -1,5 +1,4 @@
 # Resolution & Keymap
-exec xrandr -s 2560x1440 
 exec setxkbmap se -option caps:escape
 
 # Set font
