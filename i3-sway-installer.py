@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
-import os
 import subprocess
-import sys
 import argparse
 from enum import Enum, auto
 
 PACKAGES = {
     "i3": {
-        "shared": ["i3-gaps", "polybar", "dunst", "picom", "NetworkManager", "i3lock", "scrot"],
+        "shared": ["i3-gaps", "polybar", "dunst", "picom", "NetworkManager", "i3lock", "scrot", "flameshot"],
         "fedora": [],
         "debian": [],
         "arch": [],
