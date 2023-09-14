@@ -6,7 +6,16 @@ from enum import Enum, auto
 
 PACKAGES = {
     "i3": {
-        "shared": ["i3-gaps", "polybar", "dunst", "picom", "NetworkManager", "i3lock", "scrot", "flameshot"],
+        "shared": [
+            "i3-gaps",
+            "polybar",
+            "dunst",
+            "picom",
+            "NetworkManager",
+            "i3lock",
+            "scrot",
+            "flameshot",
+        ],
         "fedora": [],
         "debian": [],
         "arch": [],
@@ -16,8 +25,9 @@ PACKAGES = {
         "fedora": ["mako"],
         "debian": ["mako-notifier"],
         "arch": ["mako"],
-    }
+    },
 }
+
 
 class Distro(Enum):
     DEBIAN_BASED = auto()
@@ -25,14 +35,15 @@ class Distro(Enum):
     ARCH_BASED = auto()
     UNSUPPORTED = auto()
 
+
 def get_distro_info() -> Distro:
     with open("/etc/os-release", "r") as f:
         lines = f.readlines()
     info = {}
     for line in lines:
-        key, _, value = line.partition('=')
+        key, _, value = line.partition("=")
         info[key] = value.strip().strip('"')
-    
+
     distro = info.get("ID", "")
     distro_like = info.get("ID_LIKE", "")
 
@@ -45,22 +56,42 @@ def get_distro_info() -> Distro:
     else:
         return Distro.UNSUPPORTED
 
+
 def install_packages(window_manager: str):
     distro_type = get_distro_info()
 
     if distro_type == Distro.DEBIAN_BASED:
-        subprocess.run(["sudo", "apt-get", "install", "-y"] + PACKAGES[window_manager]["shared"] + PACKAGES[window_manager]["debian"])
+        subprocess.run(
+            ["sudo", "apt-get", "install", "-y"]
+            + PACKAGES[window_manager]["shared"]
+            + PACKAGES[window_manager]["debian"]
+        )
     elif distro_type == Distro.FEDORA_REDHAT_BASED:
-        subprocess.run(["sudo", "dnf", "install", "-y"] + PACKAGES[window_manager]["shared"] + PACKAGES[window_manager]["fedora"])
+        subprocess.run(
+            ["sudo", "dnf", "install", "-y"]
+            + PACKAGES[window_manager]["shared"]
+            + PACKAGES[window_manager]["fedora"]
+        )
     elif distro_type == Distro.ARCH_BASED:
-        subprocess.run(["sudo", "pacman", "-Suy"] + PACKAGES[window_manager]["shared"] + PACKAGES[window_manager]["arch"])
+        subprocess.run(
+            ["sudo", "pacman", "-Suy"]
+            + PACKAGES[window_manager]["shared"]
+            + PACKAGES[window_manager]["arch"]
+        )
     else:
         print(f"Unsupported distribution.")
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Install either sway or i3 based on the distribution.")
-    parser.add_argument("window_manager", choices=["sway", "i3"], help="Choose the window manager to install.")
+    parser = argparse.ArgumentParser(
+        description="Install required packages for i3 and "
+        "sway under the three linux bases (fedora, debian & arch)"
+    )
+    parser.add_argument(
+        "window_manager",
+        choices=["sway", "i3"],
+        help="Choose the window manager to install.",
+    )
     args = parser.parse_args()
 
     install_packages(args.window_manager)
-
