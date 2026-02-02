@@ -1,0 +1,52 @@
+[user]
+	name = Love Billenius
+	email = lovebillenius@disroot.org
+[init]
+	defaultBranch = master
+[ui "color"]
+	ui = always
+[color]
+    ui = true
+[core]
+    autocrlf = input
+    safecrlf = true
+	pager = bat --style=changes --italic-text=always
+	editor = nvim
+[alias]
+	c = commit
+	s = status
+	st = status
+	lg = log --oneline
+	last = log -1 HEAD
+	cl = log -p -- ':(exclude)Cargo.lock'
+	f = push --force-with-lease
+	# https://stackoverflow.com/a/11688523/472927
+	ss = "!f() { git stash show stash^{/$*} -p; }; f"
+	sa = "!f() { git stash apply stash^{/$*}; }; f"
+	sl = stash list
+[merge]
+	tool = nvim -d
+[pull]
+	ff = only
+[push]
+	autoSetupRemote = true
+	default = current
+[help]
+	# https://blog.gitbutler.com/why-is-git-autocorrect-too-fast-for-formula-one-drivers/
+	autocorrect = prompt
+[rerere]
+	enabled = true
+[column]
+	ui = auto
+[diff]
+	algorithm = histogram
+	indentHeuristic = true
+[diff "odf"]
+	textconv = odt2txt
+[branch]
+	sort = -committerdate
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
