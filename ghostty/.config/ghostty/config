@@ -1,2 +1,2 @@
-theme = catppuccin-latte.conf
+theme = light:catppuccin-latte.conf,dark:catppuccin-macchiato.conf
 font-size = 14
