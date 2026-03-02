@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+set -eu
+
+THEME_NAME="catppuccin-latte"
+HYPR_THEME="$HOME/.config/hypr/themes/${THEME_NAME}.conf"
+WAYBAR_THEME="$HOME/.config/waybar/themes/${THEME_NAME}.css"
+ROFI_THEME="$HOME/.config/rofi/themes/${THEME_NAME}.rasi"
+
+# GTK / GNOME
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-light' || true
+
+# Hyprland
+ln -sf "$HYPR_THEME" "$HOME/.config/hypr/theme.conf"
+hyprctl reload >/dev/null 2>&1 || true
+
+# Waybar
+ln -sf "$WAYBAR_THEME" "$HOME/.config/waybar/style.css"
+if pgrep -x waybar >/dev/null 2>&1; then
+    pkill -x waybar
+fi
+nohup waybar >/dev/null 2>&1 &
+
+# Rofi
+ln -sf "$ROFI_THEME" "$HOME/.config/rofi/theme.rasi"

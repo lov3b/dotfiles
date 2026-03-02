@@ -1,0 +1,130 @@
+{
+  // Overall bar placement
+  "layer": "top",
+  "position": "top",
+  "height": 32,
+  "margin-top": 8,
+  "margin-left": 12,
+  "margin-right": 12,
+  "spacing": 10,
+  "fixed-center": true,
+
+  "modules-left": ["hyprland/workspaces", "hyprland/window"],
+  "modules-center": ["clock"],
+  "modules-right": [
+    "idle_inhibitor",
+    "cpu",
+    "memory",
+    "backlight",
+    "pulseaudio",
+    "network",
+    "battery",
+    "tray"
+  ],
+
+  "hyprland/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": true,
+    "format": "{icon}",
+    "on-click": "activate",
+    "format-icons": {
+      "1": "󰖟",
+      "2": "󰘧",
+      "3": "󰈹",
+      "4": "󰓓",
+      "5": "󰓇",
+      "6": "󰝚",
+      "7": "󰎆",
+      "8": "󰎈",
+      "9": "󰎉",
+      "10": "󰎊",
+      "default": "󰐃"
+    }
+  },
+
+  "hyprland/window": {
+    "max-length": 60,
+    "separate-outputs": false,
+    "rewrite": {
+      "^(.*) — Mozilla Firefox$": "$1 · Firefox"
+    },
+    "format": "{title}",
+    "empty-format": "Workspace ready"
+  },
+
+  "clock": {
+    "interval": 1,
+    "format": "󰥔 {:%a %d %b  %H:%M}",
+    "tooltip": true,
+    "tooltip-format": "{:%A, %d %B %Y  %H:%M:%S}"
+  },
+
+  "cpu": {
+    "format": "󰍛 {usage}%",
+    "interval": 5,
+    "tooltip": true,
+    "tooltip-format": "CPU {usage}%"
+  },
+
+  "memory": {
+    "format": "󰑭 {percentage}%",
+    "interval": 10,
+    "tooltip": true,
+    "tooltip-format": "{used:0.1f} GiB / {total:0.1f} GiB"
+  },
+
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "format-icons": ["󰃞", "󰃟", "󰃠", "󰃡"],
+    "interval": 2,
+    "on-scroll-up": "brightnessctl set +5%",
+    "on-scroll-down": "brightnessctl set 5%-"
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 muted",
+    "format-icons": {
+      "headphones": "󰋋",
+      "portable": "󰋋",
+      "default": ["󰕾", "󰖀", "󰕿"]
+    },
+    "scroll-step": 2,
+    "on-click": "pavucontrol"
+  },
+
+  "network": {
+    "interval": 5,
+    "format-wifi": "󰖩 {essid}",
+    "format-ethernet": "󰈁 {ipaddr}",
+    "format-disconnected": "󰤮 offline",
+    "tooltip-format": "{ifname} via {essid} ({ipaddr})"
+  },
+
+  "battery": {
+    "states": {
+      "warning": 25,
+      "critical": 10
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-icons": ["󰂎", "󰁼", "󰁾", "󰁿", "󰁹"],
+    "tooltip": true,
+    "tooltip-format": "Battery {capacity}% ({time})"
+  },
+
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "󰅶",
+      "deactivated": "󰾪"
+    },
+    "tooltip": true
+  },
+
+  "tray": {
+    "spacing": 10,
+    "icon-size": 16
+  }
+}
