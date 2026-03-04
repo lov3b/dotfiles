@@ -5,6 +5,7 @@ THEME_NAME="catppuccin-latte"
 HYPR_THEME="$HOME/.config/hypr/themes/${THEME_NAME}.conf"
 WAYBAR_THEME="$HOME/.config/waybar/themes/${THEME_NAME}.css"
 ROFI_THEME="$HOME/.config/rofi/themes/${THEME_NAME}.rasi"
+WEZTERM_THEME_FILE="$HOME/.config/wezterm/theme.lua"
 
 # GTK / GNOME
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-light' || true
@@ -22,3 +23,8 @@ nohup waybar >/dev/null 2>&1 &
 
 # Rofi
 ln -sf "$ROFI_THEME" "$HOME/.config/rofi/theme.rasi"
+
+# WezTerm
+mkdir -p "$HOME/.config/wezterm"
+printf "return { color_scheme = '%s', force = true }\n" "Catppuccin Latte" > "$WEZTERM_THEME_FILE"
+wezterm cli reload-config >/dev/null 2>&1 || true
