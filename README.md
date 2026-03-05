@@ -19,3 +19,68 @@ stow ghostty
 ```bash
 stow -D ghostty
 ```
+
+## Configs
+
+### ghostty
+
+Ghostty terminal config with Catppuccin themes.
+
+- Dependencies: `ghostty`
+
+```bash
+sudo pacman -S --needed ghostty
+```
+
+### hyprland
+
+Hyprland compositor config, Waybar, Rofi themes, wallpaper automation, and theme switchers.
+
+- Dependencies: `hyprland`, `hyprpaper`, `waybar`, `rofi`, `dunst`, `nm-applet`,
+  `polkit-kde-agent`, `wl-clipboard`, `cliphist`, `grimblast`, `brightnessctl`,
+  `pipewire-pulse` or `pulseaudio`, `python3`, `systemd`
+- Optional: `ghostty`, `dolphin`, `firefox`, `flatpak` (Spotify/Discord/Telegram/Bitwarden),
+  `steam`, `mpv`, `wezterm`, `hypridle`, `hyprlock`
+
+```bash
+sudo pacman -S --needed hyprland hyprpaper waybar rofi dunst network-manager-applet polkit-kde-agent wl-clipboard cliphist brightnessctl pipewire-pulse python systemd
+```
+
+```bash
+sudo pacman -S --needed ghostty dolphin firefox flatpak steam mpv wezterm hypridle hyprlock
+```
+
+### paru
+
+Paru AUR helper configuration.
+
+- Dependencies: `paru`
+
+```bash
+sudo pacman -S --needed base-devel
+git clone https://aur.archlinux.org/paru-bin.git /tmp/paru
+pushd /tmp/paru
+makepkg -si
+popd
+rm -rf /tmp/paru
+```
+
+### shell
+
+Git config and attributes.
+
+- Dependencies: `git`, `bat`, `neovim`, `git-lfs`, `odt2txt`
+
+```bash
+sudo pacman -S --needed git bat neovim git-lfs odt2txt
+```
+
+### wezterm
+
+WezTerm terminal config with Catppuccin schemes.
+
+- Dependencies: `wezterm`
+
+```bash
+sudo pacman -S --needed wezterm
+```
