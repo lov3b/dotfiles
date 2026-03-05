@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+
+STATE_DIR = (
+    Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "hypr"
+)
+STATE_FILE = STATE_DIR / "mouse-dpi.json"
+THEME = Path.home() / ".config/rofi/theme.rasi"
+
+SPEED_MIN = -1.0
+SPEED_MAX = 1.0
+SPEED_STEP = 0.05
+
+
+def run(cmd, check=True):
+    return subprocess.run(cmd, check=check, text=True, capture_output=True)
+
+
+def hypr_devices():
+    result = run(["hyprctl", "-j", "devices"])
+    return json.loads(result.stdout or "{}")
+
+
+def list_mice():
+    devices = hypr_devices().get("mice", [])
+    return [d for d in devices if d.get("name")]
+
+
+def default_mouse_name():
+    for device in list_mice():
+        name = device.get("name", "")
+        if "keyboard" not in name:
+            return name
+    return None
+
+
+def get_device_speed(name):
+    for device in list_mice():
+        if device.get("name") == name:
+            return float(device.get("defaultSpeed", 0.0))
+    return 0.0
+
+
+def set_device_speed(name, speed):
+    result = run(
+        ["hyprctl", "keyword", f"device:{name}:sensitivity", str(speed)], check=False
+    )
+    error_text = f"{result.stdout}{result.stderr}".lower()
+    if result.returncode == 0 and "does not exist" not in error_text:
+        return
+    run(["hyprctl", "keyword", "input:sensitivity", str(speed)], check=False)
+
+
+def read_state():
+    if not STATE_FILE.exists():
+        return {}
+    try:
+        return json.loads(STATE_FILE.read_text())
+    except json.JSONDecodeError:
+        return {}
+
+
+def write_state(device_name, speed):
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    STATE_FILE.write_text(
+        json.dumps({"device_name": device_name, "last_speed": speed})
+    )
+
+
+def rofi_select(prompt, options):
+    input_text = "\n".join(str(opt) for opt in options)
+    proc = subprocess.run(
+        ["rofi", "-dmenu", "-i", "-p", prompt, "-theme", str(THEME)],
+        input=input_text,
+        text=True,
+        capture_output=True,
+    )
+    if proc.returncode != 0:
+        return None
+    return proc.stdout.strip() or None
+
+
+def choose_device(state):
+    env_name = os.environ.get("HYPR_MOUSE_NAME")
+    if env_name:
+        return env_name
+    if state.get("device_name"):
+        return state["device_name"]
+    default_name = default_mouse_name()
+    if default_name:
+        return default_name
+    names = [d.get("name") for d in list_mice()]
+    return rofi_select("Mouse", names)
+
+
+def apply_last(state):
+    device_name = choose_device(state)
+    if not device_name:
+        return 0
+    speed = state.get("last_speed")
+    if speed is None:
+        return 0
+    set_device_speed(device_name, speed)
+    return 0
+
+
+def speed_options():
+    steps = int(round((SPEED_MAX - SPEED_MIN) / SPEED_STEP))
+    return [round(SPEED_MIN + (i * SPEED_STEP), 2) for i in range(steps + 1)]
+
+
+def main():
+    state = read_state()
+
+    if "--apply" in sys.argv:
+        return apply_last(state)
+
+    device_name = choose_device(state)
+    if not device_name:
+        return 0
+
+    current_speed = get_device_speed(device_name)
+    selection = rofi_select("Mouse Speed", [f"{s:.2f}" for s in speed_options()])
+    if not selection:
+        set_device_speed(device_name, current_speed)
+        return 0
+
+    try:
+        speed = float(selection)
+    except ValueError:
+        return 0
+
+    if speed < SPEED_MIN or speed > SPEED_MAX:
+        return 0
+
+    speed = round(speed, 2)
+    set_device_speed(device_name, speed)
+    write_state(device_name, speed)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
