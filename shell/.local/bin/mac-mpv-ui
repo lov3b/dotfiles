@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+mpv_bin=$(command -v mpv)
+if [ -z "$mpv_bin" ]; then
+    echo "mpv not found"
+    exit 1
+fi
+
+if [ $# -ne 0 ]; then
+    exec "$mpv_bin" "$@"
+fi
+
+if ! command -v osascript >/dev/null 2>&1; then
+    exec "$mpv_bin"
+fi
+
+logo_path="/opt/homebrew/opt/mpv/share/mpv/icons/hicolor/scalable/apps/mpv.svg"
+if [ ! -f "$logo_path" ]; then
+    logo_path=$(find /opt/homebrew/opt/mpv/share/mpv/icons/ -name "*.svg" -print -quit 2>/dev/null)
+fi
+
+if [ -f "$logo_path" ]; then
+    icon_setting="POSIX file \"$logo_path\""
+else
+    icon_setting="note"
+fi
+
+response=$(
+    osascript <<EOF
+tell application "System Events"
+    try
+        set user_input to display dialog "Please enter the URI for the media you want to play with mpv:" default answer "https://" with title "MPV URI Input" with icon $icon_setting buttons {"Cancel", "Play"} default button "Play"
+        return text returned of user_input
+    on error number -128
+        return ""
+    end try
+end tell
+EOF
+)
+
+if [ -n "$response" ]; then
+    "$mpv_bin" "$response"
+else
+    echo "No URI entered. Aborting."
+fi

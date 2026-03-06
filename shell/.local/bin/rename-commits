@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+old_email="$1"
+correct_name="$2"
+correct_email="$3"
+
+if [ -z "$old_email" ]; then
+  printf "Old email: "
+  read -r old_email
+fi
+
+if [ -z "$correct_name" ]; then
+  printf "Correct name: "
+  read -r correct_name
+fi
+
+if [ -z "$correct_email" ]; then
+  printf "Correct email: "
+  read -r correct_email
+fi
+
+echo "Will use the following:"
+echo "  old email: $old_email"
+echo "  correct name: $correct_name"
+echo "  correct email: $correct_email"
+printf "Do you want to continue? (y/N) "
+read -r yn
+if [ "$yn" != "y" ]; then
+  echo "Exiting."
+  exit 0
+fi
+
+FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter "
+if [ \"\$GIT_COMMITTER_EMAIL\" = \"$old_email\" ]
+then
+    export GIT_COMMITTER_NAME=\"$correct_name\"
+    export GIT_COMMITTER_EMAIL=\"$correct_email\"
+fi
+if [ \"\$GIT_AUTHOR_EMAIL\" = \"$old_email\" ]
+then
+    export GIT_AUTHOR_NAME=\"$correct_name\"
+    export GIT_AUTHOR_EMAIL=\"$correct_email\"
+fi
+" --tag-name-filter cat -- --branches --tags

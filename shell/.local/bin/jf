@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+  echo "Please provide a file name"
+  exit 1
+fi
+
+file="$1"
+tmp=$(mktemp)
+jq . "$file" > "$tmp"
+mv "$tmp" "$file"
+echo "Formatted $file!"

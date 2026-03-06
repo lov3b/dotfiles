@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+  echo "Usage: yda <URL>"
+  exit 1
+fi
+
+yt-dlp -f bestaudio \
+  --extract-audio \
+  --audio-quality 0 \
+  --external-downloader aria2c \
+  --external-downloader-args '-x 16 -k 1M' \
+  "$1"

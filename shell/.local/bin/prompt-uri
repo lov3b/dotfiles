@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+prompt_title="${PROMPT_TITLE:-Input}"
+prompt_text="${PROMPT_TEXT:-Enter a value:}"
+default_value="${DEFAULT_VALUE:-}"
+
+if command -v rofi >/dev/null 2>&1; then
+  printf "%s" "$default_value" | rofi -dmenu -p "$prompt_title"
+  exit $?
+fi
+
+if command -v zenity >/dev/null 2>&1; then
+  zenity --entry --title="$prompt_title" --text="$prompt_text" --entry-text="$default_value"
+  exit $?
+fi
+
+if command -v kdialog >/dev/null 2>&1; then
+  kdialog --title "$prompt_title" --inputbox "$prompt_text" "$default_value"
+  exit $?
+fi
+
+if command -v osascript >/dev/null 2>&1; then
+  osascript <<EOF
+tell application "System Events"
+    try
+        set user_input to display dialog "$prompt_text" default answer "$default_value" with title "$prompt_title" with icon note buttons {"Cancel", "OK"} default button "OK"
+        return text returned of user_input
+    on error number -128
+        return ""
+    end try
+end tell
+EOF
+  exit $?
+fi
+
+printf "%s " "$prompt_text"
+read -r response
+printf "%s" "$response"

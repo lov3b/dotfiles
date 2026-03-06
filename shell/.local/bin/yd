@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+  echo "Usage: yd <URL> [sub-langs]"
+  exit 1
+fi
+
+yt-dlp \
+  --all-subs \
+  --embed-subs \
+  --write-auto-subs \
+  --merge-output-format mkv \
+  --external-downloader aria2c \
+  --external-downloader-args 'aria2c:-x 16 -k 8M' \
+  "$1"
