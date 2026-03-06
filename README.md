@@ -75,6 +75,16 @@ Git config and attributes.
 sudo pacman -S --needed git bat neovim git-lfs odt2txt
 ```
 
+### tmux
+
+tmux configuration with vim-style navigation and a custom status bar.
+
+- Dependencies: `tmux`
+
+```bash
+sudo pacman -S --needed tmux
+```
+
 ### wezterm
 
 WezTerm terminal config with Catppuccin schemes.
