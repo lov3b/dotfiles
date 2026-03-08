@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+    echo "Usage: yd-subs <URL>"
+    return 1
+fi
+
+yt-dlp \
+    --skip-download \
+    --write-subs \
+    --all-subs \
+    --convert-subs srt \
+    "$1"

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+    echo "Usage: ydb <URL>"
+    return 1
+fi
+
+yt-dlp \
+    -f 'bv*[height>=1080]+ba[language=sv]/b' \
+    -S 'res,fps,vcodec:hevc,vcodec:avc,tbr,channels,abr' \
+    --merge-output-format mkv \
+    --write-subs --all-subs --convert-subs srt --embed-subs \
+    --downloader aria2c --downloader-args 'aria2c:-x 16 -k 8M' \
+    "$1"
