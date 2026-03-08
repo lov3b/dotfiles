@@ -39,15 +39,16 @@ Hyprland compositor config, Waybar, Rofi themes, wallpaper automation, and theme
 - Dependencies: `hyprland`, `hyprpaper`, `waybar`, `rofi`, `dunst`, `nm-applet`,
   `polkit-kde-agent`, `wl-clipboard`, `cliphist`, `grimblast`, `brightnessctl`,
   `pipewire-pulse` or `pulseaudio`, `python3`, `systemd`
-- Optional: `ghostty`, `dolphin`, `firefox`, `flatpak` (Spotify/Discord/Telegram/Bitwarden),
-  `steam`, `mpv`, `wezterm`, `hypridle`, `hyprlock`
+- Optional: `ghostty`, `thunar`, `firefox`, `thunderbird`, `zathura`, `ristretto`,
+  `flatpak` (Spotify/Discord/Telegram/Bitwarden), `steam`, `mpv`, `wezterm`,
+  `hypridle`, `hyprlock`
 
 ```bash
-sudo pacman -S --needed hyprland hyprpaper waybar rofi dunst network-manager-applet polkit-kde-agent wl-clipboard cliphist brightnessctl pipewire-pulse python systemd noto-fonts
+sudo pacman -S --needed hyprland hyprpaper waybar rofi dunst network-manager-applet polkit-kde-agent wl-clipboard cliphist brightnessctl pipewire-pulse python systemd noto-fonts thunar catfish gvfs thunar-volman thunar-archive-plugin thunar-media-tags-plugin ristretto libgsf ffmpegthumbnailer
 ```
 
 ```bash
-sudo pacman -S --needed ghostty dolphin firefox flatpak steam mpv wezterm hypridle hyprlock
+sudo pacman -S --needed ghostty thunar firefox thunderbird zathura ristretto flatpak steam mpv wezterm hypridle hyprlock
 ```
 
 ### paru
