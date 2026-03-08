@@ -27,7 +27,7 @@
 @define-color accent @mauve;
 
 * {
-  font-family: "IBM Plex Sans", "JetBrains Mono", "Inter", sans-serif;
+  font-family: "Noto Sans", "Inter", sans-serif;
   font-size: 13px;
   font-weight: 500;
   min-height: 0;
@@ -81,6 +81,7 @@ window#waybar.hidden {
   color: @text;
 }
 
+#window,
 #hyprland-window {
   color: @text;
   background: alpha(@surface0, 0.92);
@@ -90,6 +91,7 @@ window#waybar.hidden {
   border: 1px solid alpha(@overlay0, 0.7);
 }
 
+#window.empty,
 #hyprland-window.empty {
   color: @subtext0;
 }
