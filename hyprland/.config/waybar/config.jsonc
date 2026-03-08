@@ -56,7 +56,7 @@
 
   "clock": {
     "interval": 1,
-    "format": "󰥔 {:%a %d %b  %H:%M}",
+    "format": "{:%a %d %b  %H:%M}",
     "tooltip": true,
     "tooltip-format": "{:%A, %d %B %Y  %H:%M:%S}",
   },
