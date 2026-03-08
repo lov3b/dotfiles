@@ -43,7 +43,7 @@ Hyprland compositor config, Waybar, Rofi themes, wallpaper automation, and theme
   `steam`, `mpv`, `wezterm`, `hypridle`, `hyprlock`
 
 ```bash
-sudo pacman -S --needed hyprland hyprpaper waybar rofi dunst network-manager-applet polkit-kde-agent wl-clipboard cliphist brightnessctl pipewire-pulse python systemd
+sudo pacman -S --needed hyprland hyprpaper waybar rofi dunst network-manager-applet polkit-kde-agent wl-clipboard cliphist brightnessctl pipewire-pulse python systemd noto-fonts
 ```
 
 ```bash
