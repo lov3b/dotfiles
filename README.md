@@ -22,6 +22,16 @@ stow -D ghostty
 
 ## Configs
 
+### foot
+
+Foot terminal config with Catppuccin themes.
+
+- Dependencies: `foot`
+
+```bash
+sudo pacman -S --needed foot
+```
+
 ### ghostty
 
 Ghostty terminal config with Catppuccin themes.
