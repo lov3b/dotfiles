@@ -59,7 +59,7 @@ Hyprland compositor config, Waybar, Rofi themes, wallpaper automation, and theme
 - Dependencies: `hyprland`, `hyprpaper`, `waybar`, `rofi`, `dunst`, `nm-applet`,
   `polkit-kde-agent`, `wl-clipboard`, `cliphist`, `grimblast`, `brightnessctl`,
   `pipewire-pulse` or `pulseaudio`, `python3`, `systemd`, `qt5ct`, `qt6ct`,
-  `kvantum`, `papirus-icon-theme`
+  `kvantum`, `papirus-icon-theme`, `breeze`, `jq`, `socat`
 - Optional: `ghostty`, `thunar`, `firefox`, `thunderbird`, `zathura`, `ristretto`,
   `flatpak` (Spotify/Discord/Telegram/Bitwarden), `steam`, `mpv`, `wezterm`,
   `foot`,
@@ -69,7 +69,7 @@ Hyprland compositor config, Waybar, Rofi themes, wallpaper automation, and theme
 - If AUR packages are unavailable, run `~/.local/bin/update-catppuccin-themes` to install the Catppuccin GTK and Kvantum assets directly for the current user.
 
 ```bash
-sudo pacman -S --needed hyprland hyprpaper waybar rofi dunst network-manager-applet polkit-kde-agent wl-clipboard cliphist brightnessctl pipewire-pulse python systemd noto-fonts thunar catfish gvfs thunar-volman thunar-archive-plugin thunar-media-tags-plugin ristretto libgsf ffmpegthumbnailer qt5ct qt6ct kvantum papirus-icon-theme
+sudo pacman -S --needed hyprland hyprpaper waybar rofi dunst network-manager-applet polkit-kde-agent wl-clipboard cliphist brightnessctl pipewire-pulse python systemd noto-fonts thunar catfish gvfs thunar-volman thunar-archive-plugin thunar-media-tags-plugin ristretto libgsf ffmpegthumbnailer qt5ct qt6ct kvantum papirus-icon-theme breeze jq socat
 ```
 
 ```bash

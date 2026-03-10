@@ -18,12 +18,15 @@ WEZTERM_THEME_FILE="$HOME/.config/wezterm/theme.lua"
 GTK_THEME_NAME="catppuccin-latte-blue-standard+default"
 GTK_THEME_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/themes/${GTK_THEME_NAME}/gtk-4.0"
 ICON_THEME_NAME="Papirus-Light"
+CURSOR_THEME_NAME="Breeze_Light"
 KVANTUM_THEME_NAME="catppuccin-latte-blue"
 
 # GTK / GNOME
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-light' || true
 gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME_NAME" || true
 gsettings set org.gnome.desktop.interface icon-theme "$ICON_THEME_NAME" || true
+gsettings set org.gnome.desktop.interface cursor-theme "$CURSOR_THEME_NAME" || true
+hyprctl setcursor "$CURSOR_THEME_NAME" 24 >/dev/null 2>&1 || true
 
 # GTK theme files
 mkdir -p "$HOME/.config/gtk-2.0" "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
