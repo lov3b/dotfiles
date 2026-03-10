@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+set -eu
+
+export XDG_CURRENT_DESKTOP=KDE
+export QT_QPA_PLATFORMTHEME=kde
+export QT_STYLE_OVERRIDE=kvantum
+
+exec /usr/bin/dolphin "$@"

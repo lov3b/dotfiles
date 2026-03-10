@@ -5,9 +5,43 @@ THEME_NAME="catppuccin-mocha"
 HYPR_THEME="$HOME/.config/hypr/themes/${THEME_NAME}.conf"
 WAYBAR_THEME="$HOME/.config/waybar/themes/${THEME_NAME}.css"
 ROFI_THEME="$HOME/.config/rofi/themes/${THEME_NAME}.rasi"
+FOOT_THEME="$HOME/.config/foot/themes/${THEME_NAME}.ini"
+GTK2_THEME_FILE="$HOME/.config/gtk-2.0/themes/${THEME_NAME}.ini"
+GTK3_THEME_FILE="$HOME/.config/gtk-3.0/themes/${THEME_NAME}.ini"
+GTK4_THEME_FILE="$HOME/.config/gtk-4.0/themes/${THEME_NAME}.ini"
+KVANTUM_THEME_FILE="$HOME/.config/Kvantum/themes/${THEME_NAME}.kvconfig"
+QT5CT_THEME_FILE="$HOME/.config/qt5ct/themes/${THEME_NAME}.conf"
+QT6CT_THEME_FILE="$HOME/.config/qt6ct/themes/${THEME_NAME}.conf"
+KDEGLOBALS_THEME_FILE="$HOME/.config/kdeglobals.themes/${THEME_NAME}.ini"
 WEZTERM_THEME_FILE="$HOME/.config/wezterm/theme.lua"
+GTK_THEME_NAME="catppuccin-mocha-blue-standard+default"
+GTK_THEME_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/themes/${GTK_THEME_NAME}/gtk-4.0"
+ICON_THEME_NAME="Papirus-Dark"
+KVANTUM_THEME_NAME="catppuccin-mocha-blue"
 
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || true
+gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME_NAME" || true
+gsettings set org.gnome.desktop.interface icon-theme "$ICON_THEME_NAME" || true
+
+# GTK theme files
+mkdir -p "$HOME/.config/gtk-2.0" "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
+ln -sf "$GTK2_THEME_FILE" "$HOME/.gtkrc-2.0.theme"
+ln -sf "$GTK3_THEME_FILE" "$HOME/.config/gtk-3.0/settings.ini"
+ln -sf "$GTK4_THEME_FILE" "$HOME/.config/gtk-4.0/settings.ini"
+if [ -d "$GTK_THEME_DIR" ]; then
+    ln -sf "$GTK_THEME_DIR/assets" "$HOME/.config/gtk-4.0/assets"
+    ln -sf "$GTK_THEME_DIR/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
+    ln -sf "$GTK_THEME_DIR/gtk-dark.css" "$HOME/.config/gtk-4.0/gtk-dark.css"
+fi
+
+# Qt themes
+mkdir -p "$HOME/.config/Kvantum" "$HOME/.config/qt5ct" "$HOME/.config/qt6ct"
+ln -sf "$KVANTUM_THEME_FILE" "$HOME/.config/Kvantum/kvantum.kvconfig"
+ln -sf "$QT5CT_THEME_FILE" "$HOME/.config/qt5ct/qt5ct.conf"
+ln -sf "$QT6CT_THEME_FILE" "$HOME/.config/qt6ct/qt6ct.conf"
+ln -sf "$KDEGLOBALS_THEME_FILE" "$HOME/.config/kdeglobals"
+dbus-update-activation-environment --systemd QT_QPA_PLATFORMTHEME=kde QT_STYLE_OVERRIDE=kvantum >/dev/null 2>&1 || true
+systemctl --user set-environment QT_QPA_PLATFORMTHEME=kde QT_STYLE_OVERRIDE=kvantum >/dev/null 2>&1 || true
 
 # Hyprland theme
 ln -sf "$HYPR_THEME" "$HOME/.config/hypr/theme.conf"
@@ -22,6 +56,10 @@ nohup waybar >/dev/null 2>&1 &
 
 # Rofi theme
 ln -sf "$ROFI_THEME" "$HOME/.config/rofi/theme.rasi"
+
+# Foot theme
+mkdir -p "$HOME/.config/foot"
+ln -sf "$FOOT_THEME" "$HOME/.config/foot/theme.ini"
 
 # WezTerm theme
 mkdir -p "$HOME/.config/wezterm"

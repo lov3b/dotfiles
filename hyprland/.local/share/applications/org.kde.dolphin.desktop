@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Dolphin
+Exec=/home/love/.local/bin/dolphin-kde %u
+Icon=org.kde.dolphin
+Type=Application
+Categories=Qt;KDE;System;FileTools;FileManager;
+MimeType=inode/directory;
+StartupWMClass=dolphin
+X-DBUS-ServiceName=org.kde.dolphin

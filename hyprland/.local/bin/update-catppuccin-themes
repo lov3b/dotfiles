@@ -1,0 +1,99 @@
+#!/usr/bin/env sh
+set -eu
+
+GTK_VERSION="${GTK_VERSION:-v1.0.3}"
+GTK_ACCENT="${GTK_ACCENT:-blue}"
+GTK_VARIANT="${GTK_VARIANT:-standard+default}"
+XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+THEMES_DIR="$XDG_DATA_HOME/themes"
+KVANTUM_DIR="$XDG_CONFIG_HOME/Kvantum"
+TMPDIR="$(mktemp -d)"
+
+cleanup() {
+    rm -rf "$TMPDIR"
+}
+
+trap cleanup EXIT INT TERM HUP
+
+need() {
+    command -v "$1" >/dev/null 2>&1 || {
+        printf 'missing dependency: %s\n' "$1" >&2
+        exit 1
+    }
+}
+
+download() {
+    url="$1"
+    output="$2"
+    curl -LfsS "$url" -o "$output"
+}
+
+extract_zip() {
+    archive="$1"
+    destination="$2"
+    python3 - "$archive" "$destination" <<'PY'
+import pathlib
+import shutil
+import sys
+import zipfile
+
+archive = pathlib.Path(sys.argv[1])
+destination = pathlib.Path(sys.argv[2])
+destination.mkdir(parents=True, exist_ok=True)
+
+with zipfile.ZipFile(archive) as zf:
+    zf.extractall(destination)
+PY
+}
+
+install_gtk_theme() {
+    flavor="$1"
+    theme_name="catppuccin-${flavor}-${GTK_ACCENT}-${GTK_VARIANT}"
+    archive="$TMPDIR/${theme_name}.zip"
+    stage="$TMPDIR/gtk-${flavor}"
+    url="https://github.com/catppuccin/gtk/releases/download/${GTK_VERSION}/${theme_name}.zip"
+
+    printf 'Installing GTK theme %s\n' "$theme_name"
+    rm -rf "$stage"
+    mkdir -p "$stage"
+    download "$url" "$archive"
+    extract_zip "$archive" "$stage"
+
+    mkdir -p "$THEMES_DIR"
+    rm -rf "$THEMES_DIR/$theme_name"
+    cp -R "$stage/$theme_name" "$THEMES_DIR/$theme_name"
+}
+
+install_kvantum_theme() {
+    archive="$TMPDIR/kvantum.zip"
+    stage="$TMPDIR/kvantum"
+    url="https://github.com/catppuccin/kvantum/archive/refs/heads/main.zip"
+
+    printf 'Installing Kvantum Catppuccin themes\n'
+    rm -rf "$stage"
+    mkdir -p "$stage"
+    download "$url" "$archive"
+    extract_zip "$archive" "$stage"
+
+    mkdir -p "$KVANTUM_DIR"
+    for theme_name in catppuccin-latte-blue catppuccin-mocha-blue; do
+        rm -rf "$KVANTUM_DIR/$theme_name"
+        cp -R "$stage/kvantum-main/themes/$theme_name" "$KVANTUM_DIR/$theme_name"
+    done
+}
+
+need curl
+need cp
+need mktemp
+need python3
+need rm
+
+install_gtk_theme latte
+install_gtk_theme mocha
+install_kvantum_theme
+
+printf 'Installed GTK themes in %s\n' "$THEMES_DIR"
+printf 'Installed Kvantum themes in %s\n' "$KVANTUM_DIR"
+printf 'Run ~/.local/bin/theme-light or ~/.local/bin/theme-dark to apply them.\n'
