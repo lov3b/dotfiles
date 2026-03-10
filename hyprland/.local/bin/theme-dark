@@ -13,6 +13,7 @@ KVANTUM_THEME_FILE="$HOME/.config/Kvantum/themes/${THEME_NAME}.kvconfig"
 QT5CT_THEME_FILE="$HOME/.config/qt5ct/themes/${THEME_NAME}.conf"
 QT6CT_THEME_FILE="$HOME/.config/qt6ct/themes/${THEME_NAME}.conf"
 KDEGLOBALS_THEME_FILE="$HOME/.config/kdeglobals.themes/${THEME_NAME}.ini"
+DUNST_THEME_FILE="$HOME/.config/dunst/themes/${THEME_NAME}.dunstrc"
 WEZTERM_THEME_FILE="$HOME/.config/wezterm/theme.lua"
 GTK_THEME_NAME="catppuccin-mocha-blue-standard+default"
 GTK_THEME_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/themes/${GTK_THEME_NAME}/gtk-4.0"
@@ -56,6 +57,11 @@ nohup waybar >/dev/null 2>&1 &
 
 # Rofi theme
 ln -sf "$ROFI_THEME" "$HOME/.config/rofi/theme.rasi"
+
+# Dunst theme
+mkdir -p "$HOME/.config/dunst"
+ln -sf "$DUNST_THEME_FILE" "$HOME/.config/dunst/dunstrc"
+dunstctl reload >/dev/null 2>&1 || { pgrep -x dunst >/dev/null 2>&1 || dunst >/dev/null 2>&1 & }
 
 # Foot theme
 mkdir -p "$HOME/.config/foot"
