@@ -9,7 +9,7 @@
   "spacing": 10,
   "fixed-center": true,
 
-  "modules-left": ["hyprland/workspaces", "hyprland/window"],
+  "modules-left": ["hyprland/workspaces", "custom/active-window"],
   "modules-center": ["clock"],
   "modules-right": [
     "idle_inhibitor",
@@ -44,14 +44,11 @@
     },
   },
 
-  "hyprland/window": {
-    "max-length": 60,
-    "separate-outputs": false,
-    "rewrite": {
-      "^(.*) — Mozilla Firefox$": "$1 · Firefox",
-    },
-    "format": "{title}",
-    "empty-format": "Workspace ready",
+  "custom/active-window": {
+    "exec": "~/.local/bin/waybar-active-window",
+    "return-type": "json",
+    "format": "{}",
+    "tooltip": false,
   },
 
   "clock": {

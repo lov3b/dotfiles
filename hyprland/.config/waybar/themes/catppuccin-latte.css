@@ -81,8 +81,7 @@ window#waybar.hidden {
   color: @text;
 }
 
-#window,
-#hyprland-window {
+#custom-active-window {
   color: @text;
   background: alpha(@surface0, 0.9);
   padding: 4px 14px;
@@ -91,9 +90,25 @@ window#waybar.hidden {
   border: 1px solid alpha(@overlay0, 0.6);
 }
 
-#window.empty,
-#hyprland-window.empty {
-  color: @subtext0;
+#custom-active-window.empty {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: transparent;
+  font-size: 0;
+  margin-left: 0;
+  margin-right: 0;
+  min-height: 0;
+  min-width: 0;
+  opacity: 0;
+  padding: 0;
+}
+
+#custom-active-window.empty label {
+  margin: 0;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
 }
 
 #clock,

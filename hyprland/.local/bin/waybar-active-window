@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+set -eu
+
+render() {
+    window_json=$(hyprctl activewindow -j 2>/dev/null || printf '{}')
+    workspace_json=$(hyprctl activeworkspace -j 2>/dev/null || printf '{}')
+
+    title=$(printf '%s' "$window_json" | jq -r '.title // empty')
+    window_workspace=$(printf '%s' "$window_json" | jq -r '.workspace.id // empty')
+    active_workspace=$(printf '%s' "$workspace_json" | jq -r '.id // empty')
+    mapped=$(printf '%s' "$window_json" | jq -r '.mapped // false')
+
+    if [ -z "$title" ] || [ "$mapped" != "true" ] || [ -z "$window_workspace" ] || [ -z "$active_workspace" ] || [ "$window_workspace" != "$active_workspace" ]; then
+        printf '{"text":"","class":"empty"}\n'
+        return
+    fi
+
+    text=$(printf '%s' "$title" | sed 's/ — Mozilla Firefox$/ · Firefox/')
+    text=$(printf '%s' "$text" | cut -c1-60)
+
+    printf '{"text":%s,"class":"occupied"}\n' "$(printf '%s' "$text" | jq -Rs .)"
+}
+
+socket_path="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
+
+render
+
+if [ ! -S "$socket_path" ]; then
+    exit 0
+fi
+
+socat -U - UNIX-CONNECT:"$socket_path" | while IFS= read -r event; do
+    case "$event" in
+        activewindow*|workspace*|focusedmon*|openwindow*|closewindow*|movewindow*|fullscreen*|changefloatingmode*)
+            render
+            ;;
+    esac
+done
