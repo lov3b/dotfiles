@@ -1,0 +1,74 @@
+#!/usr/bin/env sh
+set -eu
+
+mode="${1:-area}"
+dir="$HOME/Pictures"
+stamp="$(date '+%Y-%m-%d %H-%M-%S')"
+file="$dir/Screenshot $stamp.png"
+
+need() {
+    command -v "$1" >/dev/null 2>&1 || {
+        printf 'missing dependency: %s\n' "$1" >&2
+        exit 1
+    }
+}
+
+notify_ok() {
+    title="Screenshot copied"
+    body="$file"
+
+    if command -v dunstify >/dev/null 2>&1; then
+        dunstify -a Screenshot -i "$file" "$title" "$body" >/dev/null 2>&1 || true
+    elif command -v notify-send >/dev/null 2>&1; then
+        notify-send -a Screenshot -i "$file" "$title" "$body" >/dev/null 2>&1 || true
+    fi
+}
+
+notify_err() {
+    if command -v dunstify >/dev/null 2>&1; then
+        dunstify -a Screenshot "Screenshot failed" "$1" >/dev/null 2>&1 || true
+    elif command -v notify-send >/dev/null 2>&1; then
+        notify-send -a Screenshot "Screenshot failed" "$1" >/dev/null 2>&1 || true
+    fi
+}
+
+need grim
+need wl-copy
+
+mkdir -p "$dir"
+
+case "$mode" in
+area)
+    need slurp
+    geometry="$(slurp)" || exit 0
+    [ -n "$geometry" ] || exit 0
+    grim -g "$geometry" "$file"
+    ;;
+output | full)
+    grim "$file"
+    ;;
+active | window)
+    need hyprctl
+    need jq
+    window_json="$(hyprctl activewindow -j 2>/dev/null || printf '{}')"
+    mapped="$(printf '%s' "$window_json" | jq -r '.mapped // false')"
+    x="$(printf '%s' "$window_json" | jq -r '.at[0] // empty')"
+    y="$(printf '%s' "$window_json" | jq -r '.at[1] // empty')"
+    w="$(printf '%s' "$window_json" | jq -r '.size[0] // empty')"
+    h="$(printf '%s' "$window_json" | jq -r '.size[1] // empty')"
+
+    if [ "$mapped" != "true" ] || [ -z "$x" ] || [ -z "$y" ] || [ -z "$w" ] || [ -z "$h" ]; then
+        notify_err "No active window"
+        exit 1
+    fi
+
+    grim -g "$x,$y ${w}x${h}" "$file"
+    ;;
+*)
+    printf 'usage: %s [area|output|active]\n' "$0" >&2
+    exit 1
+    ;;
+esac
+
+wl-copy <"$file"
+notify_ok
