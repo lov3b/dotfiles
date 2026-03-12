@@ -2,9 +2,34 @@
 
 from pathlib import Path
 
-home = Path.home()
-bookmarks = "\n".join(
-    f"file://{home / name}" for name in ("Pictures", "Downloads", "Documents")
-)
 
-(home / ".config" / "gtk-3.0" / "bookmarks").write_text(bookmarks)
+def main():
+    home = Path.home()
+    destination = home / ".config" / "gtk-3.0" / "bookmarks"
+    destination.parent.mkdir(parents=True, exist_ok=True)
+
+    bookmarks = [
+        f"file://{home / name}" for name in ("Pictures", "Downloads", "Documents")
+    ]
+
+    with destination.open("a+", encoding="utf-8") as f:
+        f.seek(0)  # Jump to the start of the file
+        content = f.read()
+        existing_bookmarks = {line.strip() for line in content.splitlines()}
+
+        missing_bookmarks = [
+            bookmark for bookmark in bookmarks if bookmark not in existing_bookmarks
+        ]
+        if not missing_bookmarks:
+            return
+
+        needs_separator = content and not content.endswith("\n")
+        f.seek(0, 2)  # Jump to end of the file
+
+        if needs_separator:
+            f.write("\n")
+        f.write("\n".join(missing_bookmarks) + "\n")
+
+
+if __name__ == "__main__":
+    main()
