@@ -160,8 +160,10 @@ sudo pacman -S --needed \
   `systemctl --user restart xdg-desktop-portal.service xdg-desktop-portal-gtk.service`
 - Optional SSH agent integration: `systemctl --user enable --now gcr-ssh-agent.socket`
 - Optional Git HTTPS credential storage: `git config --global credential.helper /usr/lib/git-core/git-credential-libsecret`
-- Native Element note: Arch's `element-desktop` may need `--password-store=gnome-libsecret`;
-  this repo ships a local desktop entry override for that.
+- Electron app wrappers: this repo ships `~/.local/bin/element-desktop`,
+  `~/.local/bin/discord`, `~/.local/bin/bitwarden-desktop`, and
+  `~/.local/bin/signal-desktop`, all of which force
+  `--password-store=gnome-libsecret` and are used by the local desktop entry overrides.
 
 ### paru
 
