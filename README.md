@@ -56,25 +56,112 @@ sudo pacman -S --needed foot ttf-jetbrains-mono
 
 Hyprland compositor config, Waybar, Rofi themes, wallpaper automation, and theme switchers for Hyprland, GTK, and Qt.
 
-- Dependencies: `hyprland`, `hyprpaper`, `waybar`, `rofi`, `dunst`, `nm-applet`,
-  `polkit-kde-agent`, `wl-clipboard`, `cliphist`, `grimblast`, `brightnessctl`,
-  `pipewire-pulse` or `pulseaudio`, `python3`, `systemd`, `qt5ct`, `qt6ct`,
-  `kvantum`, `papirus-icon-theme`, `breeze`, `jq`, `socat`
-- Optional: `ghostty`, `thunar`, `firefox`, `thunderbird`, `zathura`, `ristretto`,
-  `flatpak` (Spotify/Discord/Telegram/Bitwarden), `steam`, `mpv`, `wezterm`,
-  `foot`,
-  `hypridle`, `hyprlock`
+**Dependencies:**
+
+- hyprland
+- hyprpaper
+- waybar
+- rofi
+- dunst
+- nm-applet
+- polkit-kde-agent
+- wl-clipboard
+- cliphist
+- grimblast
+- brightnessctl
+- pipewire-pulse
+- python3
+- systemd
+- qt5ct
+- qt6ct
+- kvantum
+- papirus-icon-theme
+- breeze
+- jq
+- socat
+- gnome-keyring
+- libsecret
+- xdg-desktop-portal
+- xdg-desktop-portal-gtk
+- gcr-4
+- ghostty
+- thunar
+- firefox
+- thunderbird
+- zathura
+- ristretto
+- mpv
+- foot
+- hypridle
+- hyprloc
 
 - Theme assets: install Catppuccin GTK and Kvantum themes so the light/dark switchers can target Latte and Mocha variants.
 - If AUR packages are unavailable, run `~/.local/bin/update-catppuccin-themes` to install the Catppuccin GTK and Kvantum assets directly for the current user.
 
 ```bash
-sudo pacman -S --needed hyprland hyprpaper waybar rofi dunst network-manager-applet polkit-kde-agent wl-clipboard cliphist brightnessctl pipewire-pulse python systemd noto-fonts thunar catfish gvfs thunar-volman thunar-archive-plugin thunar-media-tags-plugin ristretto libgsf ffmpegthumbnailer qt5ct qt6ct kvantum papirus-icon-theme breeze jq socat
+sudo pacman -S --needed \
+    hyprland \
+    hyprpaper \
+    waybar \
+    rofi \
+    dunst \
+    network-manager-applet \
+    polkit-kde-agent \
+    wl-clipboard \
+    cliphist \
+    brightnessctl \
+    pipewire-pulse \
+    python \
+    systemd \
+    noto-fonts \
+    thunar \
+    catfish \
+    gvfs \
+    thunar-volman \
+    thunar-archive-plugin \
+    thunar-media-tags-plugin \
+    ristretto \
+    libgsf \
+    ffmpegthumbnailer \
+    qt5ct \
+    qt6ct \
+    kvantum \
+    papirus-icon-theme \
+    breeze \
+    jq \
+    socat \
+    gnome-keyring \
+    libsecret \
+    thunar \
+    firefox \
+    thunderbird \
+    zathura \
+    ristretto \
+    mpv \
+    foot \
+    hypridle \
+    hyprlock \
+    gcr-4
 ```
 
-```bash
-sudo pacman -S --needed ghostty thunar firefox thunderbird zathura ristretto flatpak steam mpv wezterm foot hypridle hyprlock
-```
+- Keyring support: the Hyprland session imports `DISPLAY`, `WAYLAND_DISPLAY`,
+  and the XDG session variables into the user D-Bus/systemd environment so
+  Secret Service prompts can appear correctly.
+- Flatpak Secret portal: `~/.config/xdg-desktop-portal/hyprland-portals.conf` explicitly routes
+  `org.freedesktop.impl.portal.Secret` to `gnome-keyring`,
+  which is needed because the stock Hyprland portal config does not pick it by default.
+- SDDM: Arch's default `/etc/pam.d/sddm` setup usually unlocks the login keyring automatically.
+  If you customized it, make sure it still includes `pam_gnome_keyring.so`.
+- Enable the user socket once after install:
+  `systemctl --user enable --now gnome-keyring-daemon.socket`
+- After the first enable in an already-running session, fully log out through `SDDM` or reboot.
+  Reloading Hyprland alone is not enough for PAM-unlocked `login.keyring`.
+- After changing portal config, restart the portal services or log out and back in:
+  `systemctl --user restart xdg-desktop-portal.service xdg-desktop-portal-gtk.service`
+- Optional SSH agent integration: `systemctl --user enable --now gcr-ssh-agent.socket`
+- Optional Git HTTPS credential storage: `git config --global credential.helper /usr/lib/git-core/git-credential-libsecret`
+- Native Element note: Arch's `element-desktop` may need `--password-store=gnome-libsecret`;
+  this repo ships a local desktop entry override for that.
 
 ### paru
 
