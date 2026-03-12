@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+
+home = Path.home()
+bookmarks = "\n".join(
+    f"file://{home / name}" for name in ("Pictures", "Downloads", "Documents")
+)
+
+(home / ".config" / "gtk-3.0" / "bookmarks").write_text(bookmarks)
