@@ -29,7 +29,7 @@ DISABLE_LS_COLORS="false"
 DISABLE_AUTO_TITLE="false"
 ENABLE_CORRECTION="false"
 
-plugins=(git tmux ssh sudo)
+plugins=(git ssh sudo)
 case $SHELL_DEVICE in
   macos)
     plugins+=(macos)
@@ -53,9 +53,9 @@ if [ -d "$ZSH" ]; then
 fi
 
 [ -f "$HOME/.config/shell/aliases.zsh" ] && source "$HOME/.config/shell/aliases.zsh"
-[ -f "$HOME/.config/shell/interactive.zsh" ] && source "$HOME/.config/shell/interactive.zsh"
 
 [ -n "$SHELL_DEVICE" ] && [ -f "$HOME/.config/shell/devices/${SHELL_DEVICE}.zsh" ] && \
   source "$HOME/.config/shell/devices/${SHELL_DEVICE}.zsh"
+[ -f "$HOME/.config/shell/interactive.zsh" ] && source "$HOME/.config/shell/interactive.zsh"
 
 [ -f "$HOME/.config/shell/device.zsh" ] && source "$HOME/.config/shell/device.zsh"
