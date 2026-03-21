@@ -1,0 +1,37 @@
+#!/bin/bash
+
+show_help() {
+    echo "Usage: $(basename "$0") <file> [additional lp options...]"
+    echo ""
+    echo "Prints a local file to the remote host 'volton' using two-sided binding."
+    echo ""
+    echo "Arguments:"
+    echo "  <file>                     The local file you want to print."
+    echo "  [additional lp options]    Extra flags to pass to 'lp' (e.g., -n 2 for two copies)."
+    echo ""
+    echo "Options:"
+    echo "  -h, --help                 Show this help message and exit."
+}
+
+main() {
+    if [[ -z "$1" ]] || [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+        show_help
+        return 0
+    fi
+
+    local file="$1"
+
+    if [[ ! -f "$file" ]]; then
+        echo "Error: File '$file' not found."
+        return 1
+    fi
+
+    if ! ssh -q -o BatchMode=yes -o ConnectTimeout=2 volton exit; then
+        echo "Error: Host 'volton' is not reachable or SSH authentication failed."
+        return 1
+    fi
+
+    ssh volton -- lp -o sides=two-sided-long-edge "${@:2}" - <"$file"
+}
+
+main "$@"
