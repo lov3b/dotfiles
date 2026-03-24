@@ -30,52 +30,12 @@ let
 in
 {
   home.username = "love";
-  home.homeDirectory = "/home/${home.username}";
+  home.homeDirectory = "/home/love";
   home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
 
-  home.packages = with pkgs; [
-    bat
-    brightnessctl
-    cliphist
-    dunst
-    firefox
-    flatpak
-    ghostty
-    git
-    git-lfs
-    glib
-    gnome-keyring
-    grim
-    hypridle
-    hyprland
-    hyprlock
-    hyprpaper
-    jq
-    libsecret
-    mpv
-    networkmanagerapplet
-    odt2txt
-    papirus-icon-theme
-    playerctl
-    python3
-    qt5ct
-    qt6ct
-    ristretto
-    rofi
-    slurp
-    socat
-    thunar
-    thunderbird
-    tmux
-    waybar
-    wl-clipboard
-    xdg-desktop-portal
-    xdg-desktop-portal-gtk
-    zathura
-    zsh
-  ];
+  home.packages = [ ];
 
   home.sessionPath = [
     "${config.home.homeDirectory}/.local/bin"
