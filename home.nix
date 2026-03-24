@@ -30,7 +30,7 @@ let
 in
 {
   home.username = "love";
-  home.homeDirectory = "/home/love";
+  home.homeDirectory = "/home/${home.username}";
   home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
