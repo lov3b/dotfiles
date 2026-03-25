@@ -1,5 +1,17 @@
 hyprland/.config/hypr/theme.conf
+hyprland/.config/dunst/dunstrc
+hyprland/.config/Kvantum/kvantum.kvconfig
+hyprland/.config/gtk-3.0/settings.ini
+hyprland/.config/gtk-4.0/assets
+hyprland/.config/gtk-4.0/gtk.css
+hyprland/.config/gtk-4.0/gtk-dark.css
+hyprland/.config/gtk-4.0/settings.ini
+hyprland/.config/qt5ct/qt5ct.conf
+hyprland/.config/qt6ct/qt6ct.conf
+hyprland/.config/kdeglobals
 hyprland/.config/rofi/theme.rasi
 hyprland/.config/waybar/style.css
 hyprland/.config/gtk-3.0/bookmarks
+hyprland/.config/systemd/user/tray.target
+hyprland/.gtkrc-2.0.theme
 *.hm-backup

@@ -35,7 +35,15 @@ in
 
   programs.home-manager.enable = true;
 
-  home.packages = [ ];
+  home.packages = [
+    pkgs.feishin
+    #pkgs.discord
+    pkgs.bitwarden-desktop
+    pkgs.element
+    pkgs.librewolf
+    pkgs.opencode
+    pkgs.btop
+  ];
 
   home.sessionPath = [
     "${config.home.homeDirectory}/.local/bin"
@@ -47,7 +55,7 @@ in
     ".config/ghostty" = mkRecursive ./ghostty/.config/ghostty;
     ".config/gtk-2.0" = mkRecursive ./hyprland/.config/gtk-2.0;
     ".config/gtk-3.0" = mkRecursive ./hyprland/.config/gtk-3.0;
-    ".config/gtk-4.0" = mkRecursive ./hyprland/.config/gtk-4.0;
+    ".config/gtk-4.0/themes" = mkRecursive ./hyprland/.config/gtk-4.0/themes;
     ".config/hypr" = mkRecursive ./hyprland/.config/hypr;
     ".config/Kvantum" = mkRecursive ./hyprland/.config/Kvantum;
     ".config/kdeglobals.themes" = mkRecursive ./hyprland/.config/kdeglobals.themes;
