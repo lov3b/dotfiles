@@ -37,7 +37,7 @@ in
 
   home.packages = [
     pkgs.feishin
-    #pkgs.discord
+    pkgs.discord
     pkgs.bitwarden-desktop
     pkgs.element
     pkgs.librewolf
