@@ -35,14 +35,15 @@ in
 
   programs.home-manager.enable = true;
 
-  home.packages = [
-    pkgs.feishin
-    pkgs.discord
-    pkgs.bitwarden-desktop
-    pkgs.element
-    pkgs.librewolf
-    pkgs.opencode
-    pkgs.btop
+  home.packages = with pkgs; [
+    feishin
+    discord
+    bitwarden-desktop
+    element
+    librewolf
+    telegram-desktop
+    opencode
+    btop
   ];
 
   home.sessionPath = [
