@@ -1,30 +1,72 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/usr/bin/env python3
 
-if ! command -v parallel > /dev/null; then
-	echo "parallel isn't installed"
-	exit 0
-fi
+import argparse
+import shutil
+import sys
+import subprocess
+from concurrent.futures import ProcessPoolExecutor, as_completed
+import threading
+from pathlib import Path
 
-if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
-  echo "Usage: $(basename "$0") [dir]"
-  exit 0
-fi
 
-dir="${1:-.}"
+def check_dependencies():
+    if shutil.which("flac") is None:
+        print("Error: 'flac' executable not found in PATH.")
+        sys.exit(1)
 
-mapfile -d $'\0' files < <(find "$dir" -type f -name '*.flac' -print0)
-files_len=${#files[@]}
 
-# Confirm if there's a lot of files
-if (( files_len > 20 )); then
-  echo -n "Found $files_len FLAC files. Proceed? (y/N) "
-  read -r yn
-  if [[ ! $yn =~ ^[Yy]$ ]]; then
-    echo "Aborted."
-    exit 1
-  fi
-fi
+def process_file(file_path: Path) -> int:
+    """Worker function to compress a single file."""
+    return subprocess.run(["flac", "-f8", "-s", str(file_path)]).returncode
 
-printf '%s\0' "${files[@]}" \
-  | parallel --null --bar flac -f8 -s {}
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Recursively re-compress FLAC files in a directory using parallel processes."
+    )
+    parser.add_argument(
+        "directory",
+        nargs="?",
+        default=".",
+        type=Path,
+        help="Directory to search for FLAC files (default: current directory)",
+    )
+
+    args = parser.parse_args()
+    search_dir = args.directory.resolve()
+
+    files = list(search_dir.rglob("*.flac"))
+
+    if not files:
+        print(f"No FLAC files found in: {search_dir}")
+        return
+
+    if len(files) > 20:
+        try:
+            confirm = (
+                input(f"Found {len(files)} FLAC files. Proceed? (y/N): ")
+                .strip()
+                .lower()
+            )
+            if confirm != "y":
+                print("Aborted.")
+                sys.exit(1)
+        except EOFError:
+            sys.exit(1)
+
+    check_dependencies()
+
+    print(f"\rProgress: [0/{len(files)}]", end="", flush=True)
+    with ProcessPoolExecutor() as executor:
+        futures = {executor.submit(process_file, f): f for f in files}
+
+        completed = 0
+        for _ in as_completed(futures):
+            completed += 1
+            print(f"\rProgress: [{completed}/{len(files)}]", end="", flush=True)
+
+    print("\nDone.")
+
+
+if __name__ == "__main__":
+    main()
