@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PRINT_HOST="volton"
+
+show_help() {
+    cat <<'EOF'
+Usage: lysprint <file>... [lp options...]
+
+Print one or more local files on the remote host "volton" using lp.
+By default, printing is two-sided, long-edge.
+
+Arguments:
+  <file>...       One or more local files to print.
+  [lp options...] Extra arguments passed through to lp.
+
+Options:
+  -h, --help      Show this help message and exit.
+  --              End of script option parsing.
+EOF
+}
+
+die() {
+    echo "Error: $*" >&2
+    exit 1
+}
+
+confirm() {
+    local reply
+    read -r -p "$1 [y/N] " reply
+    [[ $reply =~ ^([Yy]([Ee][Ss])?)$ ]]
+}
+
+main() {
+    local sides='sides=two-sided-long-edge'
+    local -a files=()
+    local -a lp_args=()
+    local file
+
+    while (($#)); do
+        case $1 in
+        -h | --help)
+            show_help
+            return 0
+            ;;
+
+        -o)
+            (($# >= 2)) || die "Missing argument after -o"
+            if [[ $2 == sides=* ]]; then
+                sides=$2
+            else
+                lp_args+=("$1" "$2")
+            fi
+            shift 2
+            ;;
+
+        --)
+            shift
+            break
+            ;;
+
+        -*)
+            lp_args+=("$1")
+            shift
+            ;;
+
+        *)
+            files+=("$1")
+            shift
+            ;;
+        esac
+    done
+
+    # After `--`, treat everything as a file.
+    while (($#)); do
+        files+=("$1")
+        shift
+    done
+
+    ((${#files[@]})) || {
+        show_help
+        return 1
+    }
+
+    for file in "${files[@]}"; do
+        [[ -f $file ]] || die "File '$file' not found."
+
+        if [[ $(basename -- "$file") == -* ]]; then
+            confirm "The file name '$file' starts with '-'. Print it anyway?" || {
+                echo Aborted. >&2
+                return 1
+            }
+        fi
+    done
+
+    if ! ssh -q -o BatchMode=yes -o ConnectTimeout=2 volton exit; then
+        die "Host 'volton' is not reachable or SSH authentication failed."
+    fi
+
+    for file in "${files[@]}"; do
+        echo "Printing $file" >&2
+        ssh "$PRINT_HOST" -- lp -o "$sides" "${lp_args[@]}" - <"$file"
+    done
+}
+
+main "$@"
