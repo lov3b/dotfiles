@@ -98,7 +98,7 @@ main() {
     fi
 
     for file in "${files[@]}"; do
-        echo "Printing $file" >&2
+        echo "Sending print job for $file" >&2
         ssh "$PRINT_HOST" -- lp -o "$sides" "${lp_args[@]}" - <"$file"
     done
 }
