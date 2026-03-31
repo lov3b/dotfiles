@@ -46,6 +46,7 @@ in
     btop
     element-desktop
     kid3
+    tokei
   ];
 
   home.sessionPath = [
