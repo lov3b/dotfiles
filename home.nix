@@ -44,6 +44,8 @@ in
     telegram-desktop
     opencode
     btop
+    element-desktop
+    kid3
   ];
 
   home.sessionPath = [
