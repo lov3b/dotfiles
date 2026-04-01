@@ -47,6 +47,9 @@ in
     element-desktop
     kid3
     tokei
+    vscode
+    glab
+    gh
   ];
 
   home.sessionPath = [
